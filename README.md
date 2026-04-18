@@ -10,10 +10,9 @@ Projeyi internette aktif etmek için Render.com kullanabilirsiniz:
 2. **Render**: [Render.com](https://render.com/)'a üye olun ve "New > Web Service" seçin.
 3. **Bağlantı**: GitHub deponuzu bağlayın.
 4. **Ayarlar**:
-   - **Runtime**: `Python` veya `Docker` seçebilirsiniz (Dockerfile hazırlandı).
-   - **Build Command**: `cd frontend && npm install && npm run build && cd ../backend && pip install -r requirements.txt`
-   - **Start Command**: `cd backend && python main.py`
-5. **Environment Variables**: Render panelinde `PORT` değerini `8000` olarak görecektir, otomatik ayarlanır.
+   - **Runtime**: `Docker` seçin (Dockerfile hazırlandı).
+   - **Build Command**: Otomatik algılanır.
+   - **Start Command**: Otomatik algılanır.
 
 ## 📱 Android Üzerinden Kullanım
 
@@ -23,9 +22,20 @@ Projeyi internette aktif etmek için Render.com kullanabilirsiniz:
    - **Provider**: `OpenRouter` seçin.
    - **API Key**: OpenRouter ücretsiz anahtarınızı girin.
    - **Model**: `google/gemma-2-9b-it:free` yazın.
-3. **Proje Başlatın**: "New Project" ile başlayın.
+
+## 🔄 Projeyi Kendi Hesabına Taşıma (Transfer)
+
+Bu projeyi başka bir GitHub hesabına taşımak istersen:
+
+1. Yeni GitHub hesabında boş bir depo oluştur.
+2. Terminaline (veya Android Termux'a) şunları yaz:
+   ```bash
+   git remote remove origin
+   git remote add origin https://github.com/YENI_KULLANICI/YENI_REPO.git
+   git push -u origin main
+   ```
 
 ## 🆓 Neden Ücretsiz?
 - **Render**: Ücretsiz web servisi sağlar.
-- **OpenRouter Free Models**: Claude kalitesine yakın açık kaynaklı modelleri ücretsiz sunar.
+- **OpenRouter Free Models**: Claude kalitesine yakın modelleri ücretsiz sunar.
 - **Sınırsız**: Kendi API anahtarınızı kullandığınız için sistem limitlerine takılmazsınız.
