@@ -14,3 +14,7 @@ INFO:     127.0.0.1:54190 - "POST /projects HTTP/1.1" 200 OK
 INFO:     127.0.0.1:54190 - "OPTIONS /projects/899abf17-c36e-4c1d-8279-d1826bde0717/chat HTTP/1.1" 200 OK
 Warning: ANTHROPIC_API_KEY not found. Using mock mode.
 INFO:     127.0.0.1:54206 - "POST /projects/899abf17-c36e-4c1d-8279-d1826bde0717/chat HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [79196]
