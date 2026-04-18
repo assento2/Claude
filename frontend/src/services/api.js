@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.DEV ? '/api' : 'http://localhost:8000';
+// In production (when served by FastAPI), we use relative paths
+// In development, we use the Vite proxy
+const API_BASE_URL = import.meta.env.DEV ? '/api' : '/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -12,7 +14,7 @@ export const projectApi = {
   createProject: (data) => api.post('/projects', data),
   updateProject: (id, data) => api.put(`/projects/${id}`, data),
   chatWithClaude: (id, message, config) => api.post(`/projects/${id}/chat`, { message, config }),
-  getHealth: () => api.get('/health'),
+  getHealth: () => axios.get('/health'),
 };
 
 export default api;
