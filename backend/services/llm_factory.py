@@ -10,21 +10,22 @@ load_dotenv()
 
 class LLMFactory:
     @staticmethod
-    def get_llm(provider: str = "anthropic", model_name: Optional[str] = None):
+    def get_llm(provider: str = "anthropic", model_name: Optional[str] = None, api_key: Optional[str] = None):
         if provider == "anthropic":
-            api_key = os.getenv("ANTHROPIC_API_KEY")
-            if not api_key:
-                # Fallback to a mock or raise error
-                print("Warning: ANTHROPIC_API_KEY not found. Using mock mode.")
+            key = api_key or os.getenv("ANTHROPIC_API_KEY")
+            if not key:
                 return None
             return ChatAnthropic(
                 model=model_name or "claude-3-5-sonnet-20240620",
-                anthropic_api_key=api_key
+                anthropic_api_key=key
             )
         elif provider == "openrouter":
+            key = api_key or os.getenv("OPENROUTER_API_KEY")
+            if not key:
+                return None
             return ChatOpenAI(
-                model=model_name or "anthropic/claude-3.5-sonnet",
-                openai_api_key=os.getenv("OPENROUTER_API_KEY"),
+                model=model_name or "google/gemma-2-9b-it:free",
+                openai_api_key=key,
                 openai_api_base="https://openrouter.ai/api/v1"
             )
         elif provider == "ollama":
@@ -37,21 +38,15 @@ class LLMFactory:
             raise ValueError(f"Unsupported provider: {provider}")
 
 class ProjectService:
-    def __init__(self, provider: str = "anthropic"):
-        self.llm = LLMFactory.get_llm(provider)
+    def __init__(self, provider: str = "anthropic", api_key: Optional[str] = None, model_name: Optional[str] = None):
+        self.provider = provider
+        self.llm = LLMFactory.get_llm(provider, model_name, api_key)
 
     async def chat_with_project(self, project: Project, message: str):
         if not self.llm:
-            return f"Mock response for project '{project.name}': I've received your message: '{message}'. To use real Claude, please provide an API key."
+            return f"API anahtarı eksik. Lütfen ayarlardan bir API anahtarı ekleyin. (Seçili Sağlayıcı: {self.provider})"
 
-        system_prompt = f"""You are Claude, a senior software engineer helping to develop the project: {project.name}.
-Project Description: {project.description}
-Current status: {project.status}
-"""
-        messages = [
-            SystemMessage(content=system_prompt),
-            HumanMessage(content=message)
-        ]
-
+        system_prompt = f"You are a senior software engineer. Project: {project.name}. Description: {project.description}"
+        messages = [SystemMessage(content=system_prompt), HumanMessage(content=message)]
         response = self.llm.invoke(messages)
         return response.content

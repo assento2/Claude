@@ -13,7 +13,6 @@ load_dotenv()
 
 app = FastAPI(title="Claude Unlimited Project Manager")
 
-# Configure CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -22,12 +21,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# In-memory storage for demonstration
 projects_db: Dict[str, Project] = {}
 
-def get_project_service():
-    provider = os.getenv("LLM_PROVIDER", "anthropic")
-    return ProjectService(provider=provider)
+class ChatRequest(BaseModel):
+    message: str
+    config: Optional[dict] = None
 
 @app.get("/")
 async def root():
@@ -38,11 +36,8 @@ async def health():
     return {"status": "healthy"}
 
 @app.post("/projects", response_model=Project)
-async def create_project(project_in: ProjectCreate, service: ProjectService = Depends(get_project_service)):
+async def create_project(project_in: ProjectCreate):
     project_id = str(uuid.uuid4())
-
-    # In a real app, we would use the service to generate stages
-    # For now, let's create a basic project structure
     project = Project(
         id=project_id,
         name=project_in.name,
@@ -60,7 +55,6 @@ async def create_project(project_in: ProjectCreate, service: ProjectService = De
             )
         ]
     )
-
     projects_db[project_id] = project
     return project
 
@@ -68,29 +62,22 @@ async def create_project(project_in: ProjectCreate, service: ProjectService = De
 async def list_projects():
     return list(projects_db.values())
 
-@app.get("/projects/{project_id}", response_model=Project)
-async def get_project(project_id: str):
-    if project_id not in projects_db:
-        raise HTTPException(status_code=404, detail="Project not found")
-    return projects_db[project_id]
-
-class ChatRequest(BaseModel):
-    message: str
-
 @app.post("/projects/{project_id}/chat")
-async def chat_with_claude(project_id: str, chat_req: ChatRequest, service: ProjectService = Depends(get_project_service)):
+async def chat_with_claude(project_id: str, chat_req: ChatRequest):
     if project_id not in projects_db:
         raise HTTPException(status_code=404, detail="Project not found")
 
     project = projects_db[project_id]
 
-    # Call LLM service
+    # Use config from request if provided, otherwise fallback to env
+    provider = chat_req.config.get("provider", "anthropic") if chat_req.config else os.getenv("LLM_PROVIDER", "anthropic")
+    api_key = chat_req.config.get("apiKey") if chat_req.config else None
+    model_name = chat_req.config.get("model") if chat_req.config else None
+
+    service = ProjectService(provider=provider, api_key=api_key, model_name=model_name)
+
     try:
         response = await service.chat_with_project(project, chat_req.message)
         return {"response": response}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)

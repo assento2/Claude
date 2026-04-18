@@ -1,52 +1,27 @@
-# Claude Unlimited Project Manager
+# Claude Unlimited Project Manager (Android & Web)
 
-Bu proje, Claude yapay zekasını (ve diğer modelleri) projelerinizi geliştirmek için kullanabileceğiniz bir web arayüzü sağlar.
+Bu sistem, bilgisayara ihtiyaç duymadan doğrudan Android cihazınızın tarayıcısı üzerinden Claude ve diğer yapay zeka modellerini ücretsiz kullanmanıza olanak tanır.
 
-## Özellikler
-- **Çoklu Model Desteği**: Anthropic (Claude), OpenRouter ve Ollama (Yerel).
-- **Ücretsiz Kullanım**:
-    - **Ollama**: Kendi bilgisayarınızda Ollama çalıştırarak Llama 3 veya Gemma gibi modelleri tamamen ücretsiz ve sınırsız kullanabilirsiniz.
-    - **OpenRouter**: OpenRouter üzerindeki ücretsiz modelleri (örneğin Qwen veya bazı Llama sürümleri) kullanabilirsiniz.
-- **Proje Takibi**: Projenizi aşamalara ayırır ve Claude ile adım adım geliştirmenize olanak tanır.
+## 📱 Android Üzerinden Kullanım
 
-## Nasıl Başlanır?
+1. **Arayüze Erişin**: Size sağlanan web bağlantısını Android tarayıcınızda açın.
+2. **Ayarları Yapılandırın**:
+   - Sağ üstteki **Ayarlar (çark)** simgesine tıklayın.
+   - **Provider**: `OpenRouter` seçin.
+   - **API Key**: [OpenRouter](https://openrouter.ai/) üzerinden alacağınız ücretsiz anahtarı buraya yapıştırın. (OpenRouter'da birçok model tamamen ücretsizdir).
+   - **Model**: `google/gemma-2-9b-it:free` veya `qwen/qwen-2.5-72b-instruct:free` gibi ücretsiz modelleri yazın.
+   - **Kaydet**'e basın.
+3. **Proje Başlatın**: Ana ekrandan "New Project" diyerek projenizi tanımlayın.
+4. **Geliştirmeye Başlayın**: Sohbet arayüzü üzerinden Claude'a talimatlar verin, o projenizi geliştirsin.
 
-### 1. Backend Kurulumu
-```bash
-cd backend
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-```
+## 🛠 Teknik Özellikler
+- **Mobil Uyumlu**: Arayüz tamamen mobil cihazlar (telefon/tablet) için optimize edilmiştir.
+- **Client-Side API Key**: API anahtarlarınız sunucuda saklanmaz, sadece tarayıcınızda (localStorage) tutulur. Bu güvenlidir.
+- **Sınırsız Gelişim**: Claude projenizin her aşamasını takip eder ve sürekli olarak ilerletir.
 
-### 2. Çevresel Değişkenler
-`backend/.env` dosyası oluşturun:
-```env
-# Ücretsiz kullanım için Ollama kullanıyorsanız:
-LLM_PROVIDER=ollama
+## 🆓 Ücretsiz Seçenekler
+- **OpenRouter Free**: Hiçbir ücret ödemeden en gelişmiş açık kaynaklı modelleri kullanabilirsiniz.
+- **Ollama**: Eğer bir sunucunuz varsa, Ollama üzerinden tamamen yerel ve sınırsız kullanım sağlayabilirsiniz.
 
-# Veya OpenRouter üzerinden ücretsiz modeller için:
-# LLM_PROVIDER=openrouter
-# OPENROUTER_API_KEY=your_key_here
-
-# Gerçek Claude kullanmak isterseniz:
-# LLM_PROVIDER=anthropic
-# ANTHROPIC_API_KEY=your_key_here
-```
-
-### 3. Çalıştırma
-**Backend:**
-```bash
-cd backend
-python3 main.py
-```
-
-**Frontend:**
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-## Ücretsiz Kullanım Hakkında Not
-Claude API resmi olarak ücretlidir. Ancak bu sistem, **Ollama** entegrasyonu sayesinde kendi bilgisayarınızdaki işlem gücünü kullanarak benzer bir deneyimi tamamen ücretsiz sunar. Web sitesi üzerinden başlattığınız projenin aşamaları Claude'a (veya seçtiğiniz modele) iletilir ve sürekli gelişim sağlanır.
+---
+*Not: Bu sistem bir arayüzdür. Yapay zeka gücünü OpenRouter gibi sağlayıcılardan alır. Ücretsiz kullanım için OpenRouter'ın `:free` etiketli modellerini tercih etmeniz önerilir.*
